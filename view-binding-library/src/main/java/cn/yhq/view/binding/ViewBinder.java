@@ -21,7 +21,10 @@ import cn.yhq.view.binding.provider.impl.CheckBoxBinding;
 import cn.yhq.view.binding.provider.impl.ImageViewBinding;
 import cn.yhq.view.binding.provider.impl.TextViewBinding;
 
-
+/**
+ * 组件绑定统一接口
+ *
+ */
 public final class ViewBinder {
   private static Map<Class<?>, ITextViewBinding> mTextViewBindings = new HashMap<>();
   private static Map<Class<?>, IImageViewBinding> mImageViewBindings = new HashMap<>();
