@@ -3,6 +3,11 @@ package cn.yhq.view.binding;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,6 +41,12 @@ public final class ViewBinder {
     register(Button.class, new TextViewBinding());
     register(EditText.class, new TextViewBinding());
     register(ImageView.class, new ImageViewBinding());
+
+    register(AppCompatCheckBox.class, new CheckBoxBinding());
+    register(AppCompatTextView.class, new TextViewBinding());
+    register(AppCompatButton.class, new TextViewBinding());
+    register(AppCompatEditText.class, new TextViewBinding());
+    register(AppCompatImageView.class, new ImageViewBinding());
   }
 
   @SuppressWarnings("unchecked")
