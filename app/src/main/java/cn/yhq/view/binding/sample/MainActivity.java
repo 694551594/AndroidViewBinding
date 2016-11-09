@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cn.yhq.base.BaseActivity;
+import cn.yhq.view.binding.IPropertyChanged;
 import cn.yhq.view.binding.IViewBinder;
 import cn.yhq.view.binding.ViewBinder;
 
@@ -13,12 +14,12 @@ public class MainActivity extends BaseActivity {
     private User user;
     private int index;
     private ViewBinder<User> viewBinder;
-    
+
     static {
         CustomActivityOnCrash.setShowErrorDetails(true);
     }
 
-    public static class User {
+    public static class User extends IPropertyChanged<User> {
         private String username;
         private String password;
 
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity {
 
         public void setUsername(String username) {
             this.username = username;
+            this.notifyPropertyChanged();
         }
 
         public String getPassword() {
@@ -36,6 +38,7 @@ public class MainActivity extends BaseActivity {
 
         public void setPassword(String password) {
             this.password = password;
+            this.notifyPropertyChanged();
         }
     }
 
@@ -69,7 +72,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 user.setUsername("用户名改变了" + index++);
                 user.setPassword("用户密码改变了" + index++);
-                viewBinder.refresh();
+                // viewBinder.refresh();
             }
         });
     }

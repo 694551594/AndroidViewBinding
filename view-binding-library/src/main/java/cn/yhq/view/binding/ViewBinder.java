@@ -28,6 +28,9 @@ public class ViewBinder<T> implements IViewBinder<T> {
     public ViewBinder<T> bind(T data, IViewBinder<T> viewBinder) {
         this.viewBinder = viewBinder;
         this.data = data;
+        if (this.data instanceof IPropertyChanged) {
+            ((IPropertyChanged<T>)data).setViewBinder(this);
+        }
         this.refresh();
         return this;
     }
