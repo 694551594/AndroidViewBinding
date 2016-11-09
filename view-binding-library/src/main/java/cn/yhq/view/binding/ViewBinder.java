@@ -26,32 +26,41 @@ import cn.yhq.view.binding.finder.ViewFinder;
 
 public class ViewBinder {
     private ViewFactory viewFactory;
-    private PropertyChangeSupport propertyChangeSupport;
-    private Map<String, PropertyChangeListener> listeners = new HashMap<>();
+    private Map<String, PropertyChangeSupport> propertyChangeSupports = new HashMap<>();
+    private Map<String, Map<String, PropertyChangeListener>> listeners = new HashMap<>();
     private JexlContext jexlContext = new MapContext();
     private JexlEngine jexlEngine = new JexlBuilder().create();
 
-    public ViewBinder setData(PropertyChangeSupport propertyChangeSupport) {
-        return setData(propertyChangeSupport.getClass().getSimpleName(), propertyChangeSupport);
+    public <T extends PropertyChangeSupport> ViewBinder put(T propertyChangeSupport) {
+        return put(propertyChangeSupport.getClass().getSimpleName(), propertyChangeSupport);
     }
 
-    public ViewBinder setData(String name, PropertyChangeSupport propertyChangeSupport) {
-        this.propertyChangeSupport = propertyChangeSupport;
-        jexlContext.set(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
+    public <T extends PropertyChangeSupport> ViewBinder put(String name, T propertyChangeSupport) {
+        this.propertyChangeSupports.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
+        this.jexlContext.set(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
         return this;
     }
 
     public ViewBinder execute() {
-        for (Map.Entry<String, PropertyChangeListener> entry : listeners.entrySet()) {
-            this.propertyChangeSupport.addPropertyChangeListener(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, Map<String, PropertyChangeListener>> entry1 : listeners.entrySet()) {
+            PropertyChangeSupport propertyChangeSupport = propertyChangeSupports.get(entry1.getKey());
+            for (Map.Entry<String, PropertyChangeListener> entry2 : entry1.getValue().entrySet()) {
+                propertyChangeSupport.addPropertyChangeListener(entry2.getKey(), entry2.getValue());
+            }
+            propertyChangeSupport.fireChangeAll();
         }
-        this.propertyChangeSupport.fireChangeAll();
         return this;
     }
 
     public ViewBinder bind(final int id, final BindType type, final String express) {
+        String dataName = express.substring(0, express.indexOf("."));
         String propertyName = express.substring(express.indexOf(".") + 1, express.length());
-        this.listeners.put(propertyName, new PropertyChangeListener() {
+        Map<String, PropertyChangeListener> mapper = this.listeners.get(dataName);
+        if (mapper == null) {
+            mapper = new HashMap<>();
+            this.listeners.put(dataName, mapper);
+        }
+        mapper.put(propertyName, new PropertyChangeListener() {
             @Override
             public void propertyChanged() {
                 JexlExpression jexlExpression = jexlEngine.createExpression(express);

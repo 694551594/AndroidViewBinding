@@ -11,7 +11,8 @@ import cn.yhq.view.binding.PropertyChangeSupport;
 import cn.yhq.view.binding.ViewBinder;
 
 public class MainActivity extends BaseActivity {
-    private User user;
+    private User user1;
+    private User user2;
     private int index;
 
     static {
@@ -45,14 +46,20 @@ public class MainActivity extends BaseActivity {
     protected void onViewCreated(Bundle savedInstanceState) {
         super.onViewCreated(savedInstanceState);
 
-        this.user = new User();
-        this.user.setPassword("我是密码");
-        this.user.setUsername("我是用户名");
+        this.user1 = new User();
+        this.user1.setPassword("我是用户1密码");
+        this.user1.setUsername("我是用户1用户名");
+
+        this.user2 = new User();
+        this.user2.setPassword("我是用户2密码");
+        this.user2.setUsername("我是用户2用户名");
+
 
         ViewBinder viewBinder = new ViewBinder(this)
-                .setData(user)
-                .bind(R.id.textView1, BindType.TEXT, "user.username")
-                .bind(R.id.textView2, BindType.TEXT, "user.password")
+                .put("user1", user1)
+                .put("user2", user2)
+                .bind(R.id.textView1, BindType.TEXT, "user1.username")
+                .bind(R.id.textView2, BindType.TEXT, "user2.password")
                 .execute();
 
         Button button = viewBinder.getView(R.id.button);
@@ -60,8 +67,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 index++;
-                user.setUsername("用户名改变了" + index);
-                user.setPassword("用户密码改变了" + index);
+                user1.setUsername("用户1用户名改变了" + index);
+                // user2.setPassword("用户2用户密码改变了" + index);
             }
         });
     }
