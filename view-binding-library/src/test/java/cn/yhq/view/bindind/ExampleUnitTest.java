@@ -1,4 +1,4 @@
-package cn.yhq.view.binding;
+package cn.yhq.view.bindind;
 
 import org.junit.Test;
 

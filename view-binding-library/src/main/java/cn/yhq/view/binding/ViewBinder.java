@@ -3,171 +3,96 @@ package cn.yhq.view.binding;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
+import android.util.SparseArray;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
-import cn.yhq.view.binding.provider.ICheckBoxBinding;
-import cn.yhq.view.binding.provider.IImageViewBinding;
-import cn.yhq.view.binding.provider.ITextViewBinding;
-import cn.yhq.view.binding.provider.impl.CheckBoxBinding;
-import cn.yhq.view.binding.provider.impl.ImageViewBinding;
-import cn.yhq.view.binding.provider.impl.TextViewBinding;
+import cn.yhq.view.binding.finder.ActivityViewFinder;
+import cn.yhq.view.binding.finder.ViewFinder;
 
 /**
- * 组件绑定统一接口
- *
+ * Created by Yanghuiqiang on 2016/11/9.
  */
-public final class ViewBinder {
-  private static Map<Class<?>, ITextViewBinding> mTextViewBindings = new HashMap<>();
-  private static Map<Class<?>, IImageViewBinding> mImageViewBindings = new HashMap<>();
-  private static Map<Class<?>, ICheckBoxBinding> mCheckBoxBindings = new HashMap<>();
 
-  static {
-    register(CheckBox.class, new CheckBoxBinding());
-    register(TextView.class, new TextViewBinding());
-    register(Button.class, new TextViewBinding());
-    register(EditText.class, new TextViewBinding());
-    register(ImageView.class, new ImageViewBinding());
+public class ViewBinder<T> implements IViewBinder<T> {
+    private ViewFactory viewFactory;
+    private T data;
+    private IViewBinder<T> viewBinder;
 
-    register(AppCompatCheckBox.class, new CheckBoxBinding());
-    register(AppCompatTextView.class, new TextViewBinding());
-    register(AppCompatButton.class, new TextViewBinding());
-    register(AppCompatEditText.class, new TextViewBinding());
-    register(AppCompatImageView.class, new ImageViewBinding());
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T extends View> T findViewById(View v, int id) {
-    return (T) v.findViewById(id);
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T extends View> T findViewById(Activity activity, int id) {
-    return (T) activity.findViewById(id);
-  }
-
-  public static void setVisibility(View v, int visibility) {
-    v.setVisibility(visibility);
-  }
-
-  public static void register(Class<?> viewClass, ITextViewBinding binding) {
-    mTextViewBindings.put(viewClass, binding);
-  }
-
-  public static void register(Class<?> viewClass, IImageViewBinding provider) {
-    mImageViewBindings.put(viewClass, provider);
-  }
-
-  public static void register(Class<?> viewClass, ICheckBoxBinding provider) {
-    mCheckBoxBindings.put(viewClass, provider);
-  }
-
-  public static void bindTextData(View v, CharSequence data) {
-    ITextViewBinding provider = mTextViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public ViewBinder<T> bind(T data) {
+        bind(data, null);
+        return this;
     }
-    provider.setText(v, data);
-  }
 
-  public static void bindTextData(View v, int resId) {
-    ITextViewBinding provider = mTextViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public ViewBinder<T> bind(T data, IViewBinder<T> viewBinder) {
+        this.viewBinder = viewBinder;
+        this.data = data;
+        this.refresh();
+        return this;
     }
-    provider.setText(v, resId);
-  }
 
-  public static void bindCheckData(View v, boolean checked) {
-    ICheckBoxBinding provider = mCheckBoxBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    @Override
+    public void onBinding(ViewBinder<T> viewBinder, T data) {
+        if (this.viewBinder != null) {
+            this.viewBinder.onBinding(viewBinder, data);
+        }
     }
-    provider.setChecked(v, checked);
-  }
 
-  public static void bindImageData(View v, String url) {
-    IImageViewBinding provider = mImageViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public void refresh() {
+        this.onBinding(this, data);
     }
-    provider.setImage(v, url);
-  }
 
-  public static void bindImageData(View v, Bitmap bitmap) {
-    IImageViewBinding provider = mImageViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public ViewBinder(Activity activity) {
+        viewFactory = new ViewFactory(new ActivityViewFinder(activity));
     }
-    provider.setImage(v, bitmap);
-  }
 
-  public static void bindImageData(View v, Drawable drawable) {
-    IImageViewBinding provider = mImageViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public ViewBinder(View view) {
+        viewFactory = new ViewFactory(new ViewFinder(view));
     }
-    provider.setImage(v, drawable);
-  }
 
-  public static void bindImageData(View v, int resId) {
-    IImageViewBinding provider = mImageViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public ViewBinder(SparseArray<View> views) {
+        viewFactory = new ViewFactory(views, null);
     }
-    provider.setImage(v, resId);
-  }
 
-  public static void bindImageData(View v, File file) {
-    IImageViewBinding provider = mImageViewBindings.get(v.getClass());
-    if (provider == null) {
-      return;
+    public <T extends View> T getView(int id) {
+        return viewFactory.getView(id);
     }
-    provider.setImage(v, file);
-  }
 
-  public static void bindTextData(View v, int resId, CharSequence data) {
-    bindTextData(v.findViewById(resId), data);
-  }
+    public void setVisibility(int id, int visibility) {
+        ViewFactory.setVisibility(getView(id), visibility);
+    }
 
-  public static void bindTextData(View v, int resId, int data) {
-    bindTextData(v.findViewById(resId), data);
-  }
+    public void setText(int id, CharSequence data) {
+        ViewFactory.setText(getView(id), data);
+    }
 
-  public static void bindCheckData(View v, int resId, boolean checked) {
-    bindCheckData(v.findViewById(resId), checked);
-  }
+    public void setText(int id, int resId) {
+        ViewFactory.setText(getView(id), resId);
+    }
 
-  public static void bindImageData(View v, int resId, String url) {
-    bindImageData(v.findViewById(resId), url);
-  }
+    public void setCheck(int id, boolean checked) {
+        ViewFactory.setCheck(getView(id), checked);
+    }
 
-  public static void bindImageData(View v, int resId, Bitmap bitmap) {
-    bindImageData(v.findViewById(resId), bitmap);
-  }
+    public void setImage(int id, String url) {
+        ViewFactory.setImage(getView(id), url);
+    }
 
-  public static void bindImageData(View v, int resId, Drawable drawable) {
-    bindImageData(v.findViewById(resId), drawable);
-  }
+    public void setImage(int id, Bitmap bitmap) {
+        ViewFactory.setImage(getView(id), bitmap);
+    }
 
-  public static void bindImageData(View v, int resId, int data) {
-    bindImageData(v.findViewById(resId), data);
-  }
+    public void setImage(int id, Drawable drawable) {
+        ViewFactory.setImage(getView(id), drawable);
+    }
 
-  public static void bindImageData(View v, int resId, File file) {
-    bindImageData(v.findViewById(resId), file);
-  }
+    public void setImage(int id, int resId) {
+        ViewFactory.setImage(getView(id), resId);
+    }
+
+    public void setImage(int id, File file) {
+        ViewFactory.setImage(getView(id), file);
+    }
+
 }
