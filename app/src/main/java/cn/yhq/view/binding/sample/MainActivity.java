@@ -55,14 +55,14 @@ public class MainActivity extends BaseActivity {
         this.user2.setUsername("我是用户2用户名");
 
 
-        ViewBinder viewBinder = new ViewBinder(this)
+        new ViewBinder(this)
                 .put("user1", user1)
                 .put("user2", user2)
                 .bind(R.id.textView1, BindType.TEXT, "user1.username")
                 .bind(R.id.textView2, BindType.TEXT, "user2.password")
                 .execute();
 
-        Button button = viewBinder.getView(R.id.button);
+        Button button = this.getView(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
