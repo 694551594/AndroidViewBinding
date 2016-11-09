@@ -7,5 +7,7 @@ package cn.yhq.view.binding;
 public enum BindType {
     TEXT,
     CHECKED,
-    URI
+    IMAGE_URL,
+    IMAGE_RESID,
+    VISIBILITY
 }

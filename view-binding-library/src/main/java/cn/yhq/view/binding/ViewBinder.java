@@ -67,10 +67,19 @@ public class ViewBinder {
                 Object newValue = jexlExpression.evaluate(jexlContext);
                 switch (type) {
                     case TEXT:
-                        setText(id, String.valueOf(newValue));
+                        setText(id, newValue.toString());
                         break;
                     case CHECKED:
-                        setCheck(id, Boolean.valueOf((Boolean) newValue));
+                        setCheck(id, (Boolean) newValue);
+                        break;
+                    case VISIBILITY:
+                        setVisibility(id, (Integer) newValue);
+                        break;
+                    case IMAGE_URL:
+                        setImage(id, newValue.toString());
+                        break;
+                    case IMAGE_RESID:
+                        setImage(id, (Integer) newValue);
                         break;
                 }
             }
