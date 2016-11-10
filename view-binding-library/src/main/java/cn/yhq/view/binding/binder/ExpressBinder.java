@@ -14,14 +14,13 @@ import java.util.regex.Pattern;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ExpressBinder implements IBinder {
+public class ExpressBinder extends BaseBinder implements IBinder {
     private JexlContext jexlContext = new MapContext();
     private JexlEngine jexlEngine = new JexlBuilder().create();
     private JxltEngine jxltEngine = jexlEngine.createJxltEngine();
-    private ViewRender viewRender;
 
     public ExpressBinder(ViewRender viewRender) {
-        this.viewRender = viewRender;
+        super(viewRender);
     }
 
     @Override

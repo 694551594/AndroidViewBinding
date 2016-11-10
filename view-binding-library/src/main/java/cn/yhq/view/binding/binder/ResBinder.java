@@ -6,11 +6,10 @@ import android.content.res.Resources;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ResBinder implements IBinder {
-    private ViewRender viewRender;
+public class ResBinder extends BaseBinder implements IBinder {
 
     public ResBinder(ViewRender viewRender) {
-        this.viewRender = viewRender;
+        super(viewRender);
     }
 
     private int getResId(Object value) {

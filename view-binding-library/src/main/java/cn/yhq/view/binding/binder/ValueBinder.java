@@ -4,11 +4,10 @@ package cn.yhq.view.binding.binder;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ValueBinder implements IBinder {
-    private ViewRender viewRender;
+public class ValueBinder extends BaseBinder implements IBinder {
 
     public ValueBinder(ViewRender viewRender) {
-        this.viewRender = viewRender;
+        super(viewRender);
     }
 
     @Override
