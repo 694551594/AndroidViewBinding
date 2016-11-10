@@ -6,9 +6,10 @@ import android.widget.Button;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cn.yhq.base.BaseActivity;
+import cn.yhq.view.binding.ViewBinder;
+import cn.yhq.view.binding.ViewBinderFactory;
 import cn.yhq.view.binding.binder.BindType;
 import cn.yhq.view.binding.property.PropertyChangeSupport;
-import cn.yhq.view.binding.ViewBinder;
 
 public class MainActivity extends BaseActivity {
     private User user1;
@@ -54,8 +55,7 @@ public class MainActivity extends BaseActivity {
         this.user2.setPassword("我是用户2密码");
         this.user2.setUsername("我是用户2用户名");
 
-
-        new ViewBinder(this)
+        ViewBinder viewBinder = ViewBinderFactory.create(this)
                 .put("user1", user1)
                 .put("user2", user2)
                 .bind(R.id.textView1, BindType.TEXT, "${user1.username}")
@@ -63,13 +63,13 @@ public class MainActivity extends BaseActivity {
                 .bind(R.id.button, BindType.TEXT, "改变值")
                 .execute();
 
-        Button button = this.getView(R.id.button);
+        Button button = viewBinder.getViewRender().getView(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 index++;
                 user1.setUsername("用户1用户名改变了" + index);
-                // user2.setPassword("用户2用户密码改变了" + index);
+                user2.setPassword("用户2用户密码改变了" + index);
             }
         });
     }

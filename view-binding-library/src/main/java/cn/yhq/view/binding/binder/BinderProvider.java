@@ -10,28 +10,27 @@ import android.view.View;
  */
 
 public class BinderProvider {
-    private final static IBinder[] binders = {
-            new ResBinder(),
-            new ExpressBinder(),
-            new ValueBinder()
+    private final ViewRender viewRender = new ViewRender();
+    private final IBinder[] binders = {
+            new ResBinder(viewRender),
+            new ExpressBinder(viewRender),
+            new ValueBinder(viewRender)
     };
 
     BinderProvider(Activity activity) {
-        for (IBinder binder : binders) {
-            binder.attach(activity, activity);
-        }
+        viewRender.attach(activity, activity);
     }
 
     BinderProvider(View view) {
-        for (IBinder binder : binders) {
-            binder.attach(view.getContext(), view);
-        }
+        viewRender.attach(view.getContext(), view);
     }
 
     BinderProvider(Context context, SparseArray<View> views) {
-        for (IBinder binder : binders) {
-            binder.attach(context, views);
-        }
+        viewRender.attach(context, views);
+    }
+
+    public ViewRender getViewRender() {
+        return viewRender;
     }
 
     public void bind(int id, BindType type, Object value) {

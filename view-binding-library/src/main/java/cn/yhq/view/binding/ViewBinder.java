@@ -13,6 +13,7 @@ import cn.yhq.view.binding.binder.BindType;
 import cn.yhq.view.binding.binder.BinderFactory;
 import cn.yhq.view.binding.binder.BinderProvider;
 import cn.yhq.view.binding.binder.ExpressBinder;
+import cn.yhq.view.binding.binder.ViewRender;
 import cn.yhq.view.binding.property.PropertyChangeListener;
 import cn.yhq.view.binding.property.PropertyChangeSupport;
 
@@ -72,6 +73,10 @@ public final class ViewBinder {
             return this;
         }
 
+    }
+
+    public ViewRender getViewRender() {
+        return binderProvider.getViewRender();
     }
 
     public ViewBinder(Activity activity) {

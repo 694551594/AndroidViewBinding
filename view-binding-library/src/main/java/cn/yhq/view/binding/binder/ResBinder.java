@@ -6,28 +6,33 @@ import android.content.res.Resources;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ResBinder extends BaseBinder implements IBinder {
+public class ResBinder implements IBinder {
+    private ViewRender viewRender;
+
+    public ResBinder(ViewRender viewRender) {
+        this.viewRender = viewRender;
+    }
 
     private int getResId(Object value) {
         if (value instanceof Integer) {
             return (int) value;
         } else {
-            Resources res = this.getContext().getResources();
-            String packageName = this.getContext().getPackageName();
+            Resources res = viewRender.getContext().getResources();
+            String packageName = viewRender.getContext().getPackageName();
             return res.getIdentifier(packageName + value.toString().replace("@", ":"), null, null);
         }
     }
 
     private boolean getBoolean(int id) {
-        return this.getContext().getResources().getBoolean(id);
+        return viewRender.getContext().getResources().getBoolean(id);
     }
 
     private String getString(int id) {
-        return this.getContext().getResources().getString(id);
+        return viewRender.getContext().getResources().getString(id);
     }
 
     private int getInt(int id) {
-        return this.getContext().getResources().getInteger(id);
+        return viewRender.getContext().getResources().getInteger(id);
     }
 
     @Override
@@ -35,21 +40,26 @@ public class ResBinder extends BaseBinder implements IBinder {
         int resId = getResId(value);
         switch (type) {
             case TEXT:
-                setText(id, resId);
+                viewRender.setText(id, resId);
                 break;
             case CHECKED:
-                setCheck(id, this.getBoolean(resId));
+                viewRender.setCheck(id, this.getBoolean(resId));
                 break;
             case VISIBILITY:
-                setVisibility(id, this.getInt(resId));
+                viewRender.setVisibility(id, this.getInt(resId));
                 break;
             case IMAGE_URL:
-                setImage(id, this.getString(resId));
+                viewRender.setImage(id, this.getString(resId));
                 break;
             case IMAGE_RESID:
-                setImage(id, resId);
+                viewRender.setImage(id, resId);
                 break;
         }
+    }
+
+    @Override
+    public void onPut(String name, Object data) {
+
     }
 
     @Override
@@ -59,4 +69,5 @@ public class ResBinder extends BaseBinder implements IBinder {
                 || (value instanceof Integer
                 && ((int) value >>> 24) >= 2);
     }
+
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
-import android.view.View;
 
 import java.io.File;
 
@@ -17,17 +16,17 @@ import cn.yhq.view.binding.provider.ViewFactory;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class BaseBinder {
+public class ViewRender {
     private Context context;
     private ViewFactory viewFactory;
 
     public void attach(Context context, Object target) {
         if (target instanceof Activity) {
             attach1((Activity) target);
-        } else if (target instanceof View) {
-            attach2((View) target);
+        } else if (target instanceof android.view.View) {
+            attach2((android.view.View) target);
         } else {
-            attach3(context, (SparseArray<View>) target);
+            attach3(context, (SparseArray<android.view.View>) target);
         }
     }
 
@@ -36,24 +35,21 @@ public class BaseBinder {
         viewFactory = new ViewFactory(new ActivityViewFinder(activity));
     }
 
-    private void attach2(View view) {
+    private void attach2(android.view.View view) {
         this.context = view.getContext();
         viewFactory = new ViewFactory(new ViewFinder(view));
     }
 
-    private void attach3(Context context, SparseArray<View> views) {
+    private void attach3(Context context, SparseArray<android.view.View> views) {
         this.context = context;
         viewFactory = new ViewFactory(views, null);
-    }
-
-    public void onPut(String name, Object data) {
     }
 
     public Context getContext() {
         return context;
     }
 
-    public <T extends View> T getView(int id) {
+    public <T extends android.view.View> T getView(int id) {
         return viewFactory.getView(id);
     }
 

@@ -14,14 +14,18 @@ import java.util.regex.Pattern;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ExpressBinder extends BaseBinder implements IBinder {
+public class ExpressBinder implements IBinder {
     private JexlContext jexlContext = new MapContext();
     private JexlEngine jexlEngine = new JexlBuilder().create();
     private JxltEngine jxltEngine = jexlEngine.createJxltEngine();
+    private ViewRender viewRender;
+
+    public ExpressBinder(ViewRender viewRender) {
+        this.viewRender = viewRender;
+    }
 
     @Override
     public void onPut(String name, Object data) {
-        super.onPut(name, data);
         this.jexlContext.set(name, data);
     }
 
@@ -31,19 +35,19 @@ public class ExpressBinder extends BaseBinder implements IBinder {
         Object newValue = expression.evaluate(jexlContext);
         switch (type) {
             case TEXT:
-                setText(id, newValue.toString());
+                viewRender.setText(id, newValue.toString());
                 break;
             case CHECKED:
-                setCheck(id, (Boolean) newValue);
+                viewRender.setCheck(id, (Boolean) newValue);
                 break;
             case VISIBILITY:
-                setVisibility(id, (Integer) newValue);
+                viewRender.setVisibility(id, (Integer) newValue);
                 break;
             case IMAGE_URL:
-                setImage(id, newValue.toString());
+                viewRender.setImage(id, newValue.toString());
                 break;
             case IMAGE_RESID:
-                setImage(id, (Integer) newValue);
+                viewRender.setImage(id, (Integer) newValue);
                 break;
         }
     }
