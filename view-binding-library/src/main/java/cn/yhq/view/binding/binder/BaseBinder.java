@@ -9,9 +9,9 @@ import android.view.View;
 
 import java.io.File;
 
-import cn.yhq.view.binding.provider.ViewFactory;
 import cn.yhq.view.binding.finder.ActivityViewFinder;
 import cn.yhq.view.binding.finder.ViewFinder;
+import cn.yhq.view.binding.provider.ViewFactory;
 
 /**
  * Created by Yanghuiqiang on 2016/11/10.
@@ -21,22 +21,32 @@ public class BaseBinder {
     private Context context;
     private ViewFactory viewFactory;
 
-    protected void from(Activity activity) {
+    public void attach(Context context, Object target) {
+        if (target instanceof Activity) {
+            attach1((Activity) target);
+        } else if (target instanceof View) {
+            attach2((View) target);
+        } else {
+            attach3(context, (SparseArray<View>) target);
+        }
+    }
+
+    private void attach1(Activity activity) {
         this.context = activity;
         viewFactory = new ViewFactory(new ActivityViewFinder(activity));
     }
 
-    protected void from(View view) {
+    private void attach2(View view) {
         this.context = view.getContext();
         viewFactory = new ViewFactory(new ViewFinder(view));
     }
 
-    protected void from(Context context, SparseArray<View> views) {
+    private void attach3(Context context, SparseArray<View> views) {
         this.context = context;
         viewFactory = new ViewFactory(views, null);
     }
 
-    public void put(String name, Object data) {
+    public void onPut(String name, Object data) {
     }
 
     public Context getContext() {

@@ -20,11 +20,10 @@ import cn.yhq.view.binding.property.PropertyChangeSupport;
  * Created by Yanghuiqiang on 2016/11/9.
  */
 
-public class ViewBinder {
+public final class ViewBinder {
     private BinderProvider binderProvider;
     private Map<String, PropertyChangeSupport> propertyChangeSupports = new HashMap<>();
     private Map<String, Map<String, PropertyChangeListener>> listeners = new HashMap<>();
-
 
     public <T extends PropertyChangeSupport> ViewBinder put(T propertyChangeSupport) {
         return put(propertyChangeSupport.getClass().getSimpleName(), propertyChangeSupport);
@@ -62,9 +61,9 @@ public class ViewBinder {
         return this;
     }
 
-    public ViewBinder bind(final int id, final BindType type, final String value) {
+    public ViewBinder bind(int id, BindType type, String value) {
         String express = ExpressBinder.getExpress(value);
-        if(express != null) {
+        if (express != null) {
             String dataName = express.substring(0, express.indexOf("."));
             String propertyName = express.substring(express.indexOf(".") + 1, express.length());
             return bind(id, type, dataName, propertyName, value);

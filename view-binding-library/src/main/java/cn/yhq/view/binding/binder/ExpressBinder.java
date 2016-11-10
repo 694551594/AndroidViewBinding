@@ -20,8 +20,8 @@ public class ExpressBinder extends BaseBinder implements IBinder {
     private JxltEngine jxltEngine = jexlEngine.createJxltEngine();
 
     @Override
-    public void put(String name, Object data) {
-        super.put(name, data);
+    public void onPut(String name, Object data) {
+        super.onPut(name, data);
         this.jexlContext.set(name, data);
     }
 
