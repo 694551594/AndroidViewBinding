@@ -62,17 +62,17 @@ public final class ViewBinder {
         return this;
     }
 
-    public ViewBinder bind(int id, BindType type, String value) {
-        String express = ExpressBinder.getExpress(value);
-        if (express != null) {
-            String dataName = express.substring(0, express.indexOf("."));
-            String propertyName = express.substring(express.indexOf(".") + 1, express.length());
-            return bind(id, type, dataName, propertyName, value);
-        } else {
-            binderProvider.bind(id, type, value);
-            return this;
+    public ViewBinder bind(int id, BindType type, Object value) {
+        if (value instanceof String) {
+            String express = ExpressBinder.getExpress((String) value);
+            if (express != null) {
+                String dataName = express.substring(0, express.indexOf("."));
+                String propertyName = express.substring(express.indexOf(".") + 1, express.length());
+                return bind(id, type, dataName, propertyName, value);
+            }
         }
-
+        binderProvider.bind(id, type, value);
+        return this;
     }
 
     public ViewRender getViewRender() {

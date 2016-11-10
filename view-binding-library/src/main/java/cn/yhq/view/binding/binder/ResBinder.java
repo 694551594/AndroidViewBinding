@@ -16,9 +16,13 @@ public class ResBinder extends BaseBinder implements IBinder {
         if (value instanceof Integer) {
             return (int) value;
         } else {
-            Resources res = viewRender.getContext().getResources();
-            String packageName = viewRender.getContext().getPackageName();
-            return res.getIdentifier(packageName + value.toString().replace("@", ":"), null, null);
+            try {
+                Resources res = viewRender.getContext().getResources();
+                String packageName = viewRender.getContext().getPackageName();
+                return res.getIdentifier(packageName + value.toString().replace("@", ":"), null, null);
+            } catch (Exception e) {
+                return 0;
+            }
         }
     }
 
@@ -63,8 +67,8 @@ public class ResBinder extends BaseBinder implements IBinder {
 
     @Override
     public boolean isHandle(Object value) {
-        return (value instanceof String && value.toString().indexOf("@") == 0
-                || value.toString().indexOf("android:@") == 0)
+        return (value instanceof String &&
+                (this.getResId(value) >>> 24) >= 2)
                 || (value instanceof Integer
                 && ((int) value >>> 24) >= 2);
     }
