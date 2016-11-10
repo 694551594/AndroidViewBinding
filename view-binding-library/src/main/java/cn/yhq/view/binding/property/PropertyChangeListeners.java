@@ -1,4 +1,4 @@
-package cn.yhq.view.binding;
+package cn.yhq.view.binding.property;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -1,35 +1,30 @@
 package cn.yhq.view.binding;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
 
-import org.apache.commons.jexl3.JexlBuilder;
-import org.apache.commons.jexl3.JexlContext;
-import org.apache.commons.jexl3.JexlEngine;
-import org.apache.commons.jexl3.JexlExpression;
-import org.apache.commons.jexl3.MapContext;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import cn.yhq.view.binding.finder.ActivityViewFinder;
-import cn.yhq.view.binding.finder.ViewFinder;
+import cn.yhq.view.binding.binder.BindType;
+import cn.yhq.view.binding.binder.BinderFactory;
+import cn.yhq.view.binding.binder.BinderProvider;
+import cn.yhq.view.binding.binder.ExpressBinder;
+import cn.yhq.view.binding.property.PropertyChangeListener;
+import cn.yhq.view.binding.property.PropertyChangeSupport;
 
 /**
  * Created by Yanghuiqiang on 2016/11/9.
  */
 
 public class ViewBinder {
-    private ViewFactory viewFactory;
+    private BinderProvider binderProvider;
     private Map<String, PropertyChangeSupport> propertyChangeSupports = new HashMap<>();
     private Map<String, Map<String, PropertyChangeListener>> listeners = new HashMap<>();
-    private JexlContext jexlContext = new MapContext();
-    private JexlEngine jexlEngine = new JexlBuilder().create();
+
 
     public <T extends PropertyChangeSupport> ViewBinder put(T propertyChangeSupport) {
         return put(propertyChangeSupport.getClass().getSimpleName(), propertyChangeSupport);
@@ -37,7 +32,7 @@ public class ViewBinder {
 
     public <T extends PropertyChangeSupport> ViewBinder put(String name, T propertyChangeSupport) {
         this.propertyChangeSupports.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
-        this.jexlContext.set(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
+        this.binderProvider.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
         return this;
     }
 
@@ -52,9 +47,7 @@ public class ViewBinder {
         return this;
     }
 
-    public ViewBinder bind(final int id, final BindType type, final String express) {
-        String dataName = express.substring(0, express.indexOf("."));
-        String propertyName = express.substring(express.indexOf(".") + 1, express.length());
+    public ViewBinder bind(final int id, final BindType type, final String dataName, final String propertyName, final Object value) {
         Map<String, PropertyChangeListener> mapper = this.listeners.get(dataName);
         if (mapper == null) {
             mapper = new HashMap<>();
@@ -63,80 +56,35 @@ public class ViewBinder {
         mapper.put(propertyName, new PropertyChangeListener() {
             @Override
             public void propertyChanged() {
-                JexlExpression jexlExpression = jexlEngine.createExpression(express);
-                Object newValue = jexlExpression.evaluate(jexlContext);
-                switch (type) {
-                    case TEXT:
-                        setText(id, newValue.toString());
-                        break;
-                    case CHECKED:
-                        setCheck(id, (Boolean) newValue);
-                        break;
-                    case VISIBILITY:
-                        setVisibility(id, (Integer) newValue);
-                        break;
-                    case IMAGE_URL:
-                        setImage(id, newValue.toString());
-                        break;
-                    case IMAGE_RESID:
-                        setImage(id, (Integer) newValue);
-                        break;
-                }
+                binderProvider.bind(id, type, value);
             }
         });
         return this;
     }
 
+    public ViewBinder bind(final int id, final BindType type, final String value) {
+        String express = ExpressBinder.getExpress(value);
+        if(express != null) {
+            String dataName = express.substring(0, express.indexOf("."));
+            String propertyName = express.substring(express.indexOf(".") + 1, express.length());
+            return bind(id, type, dataName, propertyName, value);
+        } else {
+            binderProvider.bind(id, type, value);
+            return this;
+        }
+
+    }
+
     public ViewBinder(Activity activity) {
-        viewFactory = new ViewFactory(new ActivityViewFinder(activity));
+        binderProvider = BinderFactory.create(activity);
     }
 
     public ViewBinder(View view) {
-        viewFactory = new ViewFactory(new ViewFinder(view));
+        binderProvider = BinderFactory.create(view);
     }
 
-    public ViewBinder(SparseArray<View> views) {
-        viewFactory = new ViewFactory(views, null);
-    }
-
-    public <T extends View> T getView(int id) {
-        return viewFactory.getView(id);
-    }
-
-    public void setVisibility(int id, int visibility) {
-        ViewFactory.setVisibility(getView(id), visibility);
-    }
-
-    public void setText(int id, CharSequence data) {
-        ViewFactory.setText(getView(id), data);
-    }
-
-    public void setText(int id, int resId) {
-        ViewFactory.setText(getView(id), resId);
-    }
-
-    public void setCheck(int id, boolean checked) {
-        ViewFactory.setCheck(getView(id), checked);
-    }
-
-    public void setImage(int id, String url) {
-        ViewFactory.setImage(getView(id), url);
-    }
-
-    public void setImage(int id, Bitmap bitmap) {
-        ViewFactory.setImage(getView(id), bitmap);
-    }
-
-    public void setImage(int id, Drawable drawable) {
-        ViewFactory.setImage(getView(id), drawable);
-    }
-
-    public void setImage(int id, int resId) {
-        ViewFactory.setImage(getView(id), resId);
-    }
-
-    public void setImage(int id, File file) {
-        ViewFactory.setImage(getView(id), file);
+    public ViewBinder(Context context, SparseArray<View> views) {
+        binderProvider = BinderFactory.create(context, views);
     }
 
 }

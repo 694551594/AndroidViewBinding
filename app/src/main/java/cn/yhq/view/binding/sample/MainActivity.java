@@ -6,8 +6,8 @@ import android.widget.Button;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cn.yhq.base.BaseActivity;
-import cn.yhq.view.binding.BindType;
-import cn.yhq.view.binding.PropertyChangeSupport;
+import cn.yhq.view.binding.binder.BindType;
+import cn.yhq.view.binding.property.PropertyChangeSupport;
 import cn.yhq.view.binding.ViewBinder;
 
 public class MainActivity extends BaseActivity {
@@ -58,8 +58,9 @@ public class MainActivity extends BaseActivity {
         new ViewBinder(this)
                 .put("user1", user1)
                 .put("user2", user2)
-                .bind(R.id.textView1, BindType.TEXT, "user1.username")
-                .bind(R.id.textView2, BindType.TEXT, "user2.password")
+                .bind(R.id.textView1, BindType.TEXT, "${user1.username}")
+                .bind(R.id.textView2, BindType.TEXT, "${user2.password}")
+                .bind(R.id.button, BindType.TEXT, "改变值")
                 .execute();
 
         Button button = this.getView(R.id.button);

@@ -1,4 +1,4 @@
-package cn.yhq.view.binding;
+package cn.yhq.view.binding.property;
 
 /**
  * Created by Administrator on 2016/11/9.

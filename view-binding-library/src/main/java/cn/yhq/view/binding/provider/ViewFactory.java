@@ -1,4 +1,4 @@
-package cn.yhq.view.binding;
+package cn.yhq.view.binding.provider;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -19,10 +19,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.yhq.view.binding.provider.ICheckBoxBinding;
-import cn.yhq.view.binding.provider.IImageViewBinding;
-import cn.yhq.view.binding.provider.ITextViewBinding;
 import cn.yhq.view.binding.finder.IViewFinder;
+import cn.yhq.view.binding.provider.impl.ButtonBinding;
 import cn.yhq.view.binding.provider.impl.CheckBoxBinding;
 import cn.yhq.view.binding.provider.impl.ImageViewBinding;
 import cn.yhq.view.binding.provider.impl.TextViewBinding;
@@ -42,12 +40,14 @@ public class ViewFactory {
         register(Button.class, new TextViewBinding());
         register(EditText.class, new TextViewBinding());
         register(ImageView.class, new ImageViewBinding());
+        register(Button.class, new ButtonBinding());
 
         register(AppCompatCheckBox.class, new CheckBoxBinding());
         register(AppCompatTextView.class, new TextViewBinding());
         register(AppCompatButton.class, new TextViewBinding());
         register(AppCompatEditText.class, new TextViewBinding());
         register(AppCompatImageView.class, new ImageViewBinding());
+        register(AppCompatButton.class, new ButtonBinding());
     }
 
     private SparseArray<View> views = new SparseArray<>();
@@ -62,7 +62,7 @@ public class ViewFactory {
         this.viewFinder = viewFinder;
     }
 
-    <T extends View> T getView(int id) {
+    public <T extends View> T getView(int id) {
         View view = views.get(id);
         if (view == null) {
             if (this.viewFinder != null) {
