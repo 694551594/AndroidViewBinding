@@ -30,7 +30,7 @@ public class PropertyChangeSupport {
         }
     }
 
-    public void firePropertyChange(String propertyName, Object newValue) {
+    public void firePropertyChange(String propertyName) {
         PropertyChangeListeners propertyChangeListeners = listenerMap.get(propertyName);
         if (propertyChangeListeners != null) {
             propertyChangeListeners.firePropertyChange();

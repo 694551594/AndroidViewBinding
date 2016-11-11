@@ -21,6 +21,7 @@ public class MainActivity extends BaseActivity {
     public static class User extends PropertyChangeSupport {
         private String username;
         private String password;
+        private User user;
 
         public String getUsername() {
             return username;
@@ -28,7 +29,7 @@ public class MainActivity extends BaseActivity {
 
         public void setUsername(String username) {
             this.username = username;
-            this.firePropertyChange("username", username);
+            this.firePropertyChange("username");
         }
 
         public String getPassword() {
@@ -37,7 +38,16 @@ public class MainActivity extends BaseActivity {
 
         public void setPassword(String password) {
             this.password = password;
-            this.firePropertyChange("password", password);
+            this.firePropertyChange("password");
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+            this.firePropertyChange("user");
         }
     }
 
@@ -53,13 +63,12 @@ public class MainActivity extends BaseActivity {
         this.user2.setPassword("我是用户2密码");
         this.user2.setUsername("我是用户2用户名");
 
+        this.user1.setUser(user1);
+
         DataBinderFactory.create(this)
                 .put("user1", user1)
                 .put("user2", user2)
-                .bind(R.id.textView1, BindType.TEXT, "${user1.username}")
-                .bind(R.id.textView2, BindType.TEXT, "${user2.password}")
-                .bind(R.id.button, BindType.TEXT, "改变值")
-                .bind(R.id.button, BindType.LISTENER_CLICK, new View.OnClickListener() {
+                .put("click", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         index++;
@@ -67,6 +76,10 @@ public class MainActivity extends BaseActivity {
                         user2.setPassword("用户2用户密码改变了" + index);
                     }
                 })
+                .bind(R.id.textView1, BindType.TEXT, "${user1.username}")
+                .bind(R.id.textView2, BindType.TEXT, "${user1.user.password}")
+                .bind(R.id.button, BindType.TEXT, "改变值")
+                .bind(R.id.button, BindType.LISTENER_CLICK, "${click}")
                 .execute();
     }
 

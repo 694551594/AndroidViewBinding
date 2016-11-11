@@ -27,18 +27,23 @@ public final class DataBinder {
     private Map<String, Map<String, PropertyChangeListener>> listeners = new HashMap<>();
 
     public <T extends PropertyChangeSupport> DataBinder put(T propertyChangeSupport) {
-        return put(propertyChangeSupport.getClass().getSimpleName(), propertyChangeSupport);
+        return put(propertyChangeSupport.getClass().getSimpleName().toLowerCase(Locale.getDefault()), propertyChangeSupport);
     }
 
-    public <T extends PropertyChangeSupport> DataBinder put(String name, T propertyChangeSupport) {
-        this.propertyChangeSupports.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
-        this.dataBindProvider.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
+    public DataBinder put(String name, Object data) {
+        if (data instanceof PropertyChangeSupport) {
+            this.propertyChangeSupports.put(name, (PropertyChangeSupport) data);
+        }
+        this.dataBindProvider.put(name, data);
         return this;
     }
 
     public DataBinder execute() {
         for (Map.Entry<String, Map<String, PropertyChangeListener>> entry1 : listeners.entrySet()) {
             PropertyChangeSupport propertyChangeSupport = propertyChangeSupports.get(entry1.getKey());
+            if (propertyChangeSupport == null) {
+                continue;
+            }
             for (Map.Entry<String, PropertyChangeListener> entry2 : entry1.getValue().entrySet()) {
                 propertyChangeSupport.addPropertyChangeListener(entry2.getKey(), entry2.getValue());
             }
@@ -66,9 +71,11 @@ public final class DataBinder {
         if (value instanceof String) {
             String express = ExpressBinder.getExpress((String) value);
             if (express != null) {
-                String dataName = express.substring(0, express.indexOf("."));
-                String propertyName = express.substring(express.indexOf(".") + 1, express.length());
-                return bind(id, type, dataName, propertyName, value);
+                if (express.indexOf(".") != -1) {
+                    String dataName = express.substring(0, express.indexOf("."));
+                    String propertyName = express.substring(express.indexOf(".") + 1, express.length());
+                    return bind(id, type, dataName, propertyName, value);
+                }
             }
         }
         dataBindProvider.bind(id, type, value);
