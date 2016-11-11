@@ -64,7 +64,8 @@ public final class DataBinder {
             String name = entry.getKey();
             BindInfo bindInfo = entry.getValue();
             if (!datas.containsKey(name)) {
-                Object data = this.dataBindProvider.put(name, "${" + name + "}");
+                String value = name;
+                Object data = this.dataBindProvider.put(name, "${" + value + "}");
                 if (data instanceof PropertyChangeSupport) {
                     this.propertyChangeSupports.put(name, (PropertyChangeSupport) data);
                 }
