@@ -58,6 +58,8 @@ public class ResBinder extends BaseDataBinder implements IDataBinder {
             case IMAGE_DRAWABLE:
                 viewRender.setImage(id, this.getDrawable(resId));
                 break;
+            case IMAGE_BITMAP:
+                break;
             case TAG:
                 break;
             case LISTENER_CLICK:

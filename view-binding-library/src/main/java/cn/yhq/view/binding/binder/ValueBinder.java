@@ -1,5 +1,6 @@
 package cn.yhq.view.binding.binder;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +32,9 @@ public class ValueBinder extends BaseDataBinder implements IDataBinder {
                 break;
             case IMAGE_DRAWABLE:
                 viewRender.setImage(id, (Drawable) value);
+                break;
+            case IMAGE_BITMAP:
+                viewRender.setImage(id, (Bitmap) value);
                 break;
             case TAG:
                 viewRender.setTag(id, value);

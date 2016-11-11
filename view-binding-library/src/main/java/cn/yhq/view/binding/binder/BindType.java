@@ -9,6 +9,7 @@ public enum BindType {
     CHECKED,
     IMAGE_URL,
     IMAGE_RESID,
+    IMAGE_BITMAP,
     IMAGE_FILE,
     IMAGE_DRAWABLE,
     TAG,

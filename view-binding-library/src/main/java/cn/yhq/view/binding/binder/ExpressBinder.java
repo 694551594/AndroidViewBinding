@@ -1,6 +1,10 @@
 package cn.yhq.view.binding.binder;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CompoundButton;
 
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlContext;
@@ -48,18 +52,26 @@ public class ExpressBinder extends BaseDataBinder implements IDataBinder {
             case IMAGE_DRAWABLE:
                 viewRender.setImage(id, (Drawable) newValue);
                 break;
+            case IMAGE_BITMAP:
+                viewRender.setImage(id, (Bitmap) newValue);
+                break;
             case TAG:
                 viewRender.setTag(id, newValue);
                 break;
             case LISTENER_CLICK:
+                viewRender.setOnClickListener(id, (View.OnClickListener) newValue);
                 break;
             case LISTENER_LONG_CLICK:
+                viewRender.setOnLongClickListener(id, (View.OnLongClickListener) newValue);
                 break;
             case LISTENER_ITEM_CLICK:
+                viewRender.setOnItemClickListener(id, (AdapterView.OnItemClickListener) newValue);
                 break;
             case LISTENER_ITEM_LONG_CLICK:
+                viewRender.setOnItemLongClickListener(id, (AdapterView.OnItemLongClickListener) newValue);
                 break;
             case LISTENER_CHECKED_CHANGE:
+                viewRender.setOnCheckedChangeListener(id, (CompoundButton.OnCheckedChangeListener) newValue);
                 break;
             case VISIBILITY:
                 viewRender.setVisibility(id, (Integer) newValue);
