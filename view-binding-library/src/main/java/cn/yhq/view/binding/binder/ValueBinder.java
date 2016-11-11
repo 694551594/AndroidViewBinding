@@ -67,8 +67,8 @@ public class ValueBinder extends BaseDataBinder implements IDataBinder {
     }
 
     @Override
-    public void onPut(String name, Object data) {
-
+    public Object onPut(String name, Object data) {
+        return data;
     }
 
     @Override

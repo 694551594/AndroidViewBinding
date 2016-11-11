@@ -7,7 +7,7 @@ package cn.yhq.view.binding.binder;
 public interface IDataBinder {
     void onBind(int id, BindType type, Object value);
 
-    void onPut(String name, Object data);
+    Object onPut(String name, Object data);
 
     boolean isHandle(Object value);
 }

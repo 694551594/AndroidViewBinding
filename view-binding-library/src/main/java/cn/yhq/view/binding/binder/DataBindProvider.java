@@ -42,10 +42,11 @@ public class DataBindProvider {
         }
     }
 
-    public void put(String name, Object data) {
+    public Object put(String name, Object data) {
         for (IDataBinder binder : binders) {
-            binder.onPut(name, data);
+            data = binder.onPut(name, data);
         }
+        return data;
     }
 
 }
