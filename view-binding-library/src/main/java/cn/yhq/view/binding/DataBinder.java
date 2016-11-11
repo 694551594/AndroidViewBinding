@@ -10,8 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import cn.yhq.view.binding.binder.BindType;
-import cn.yhq.view.binding.binder.BinderFactory;
-import cn.yhq.view.binding.binder.BinderProvider;
+import cn.yhq.view.binding.binder.DataBindProvider;
+import cn.yhq.view.binding.binder.DataBindProviderFactory;
 import cn.yhq.view.binding.binder.ExpressBinder;
 import cn.yhq.view.binding.binder.ViewRender;
 import cn.yhq.view.binding.property.PropertyChangeListener;
@@ -21,22 +21,22 @@ import cn.yhq.view.binding.property.PropertyChangeSupport;
  * Created by Yanghuiqiang on 2016/11/9.
  */
 
-public final class ViewBinder {
-    private BinderProvider binderProvider;
+public final class DataBinder {
+    private DataBindProvider dataBindProvider;
     private Map<String, PropertyChangeSupport> propertyChangeSupports = new HashMap<>();
     private Map<String, Map<String, PropertyChangeListener>> listeners = new HashMap<>();
 
-    public <T extends PropertyChangeSupport> ViewBinder put(T propertyChangeSupport) {
+    public <T extends PropertyChangeSupport> DataBinder put(T propertyChangeSupport) {
         return put(propertyChangeSupport.getClass().getSimpleName(), propertyChangeSupport);
     }
 
-    public <T extends PropertyChangeSupport> ViewBinder put(String name, T propertyChangeSupport) {
+    public <T extends PropertyChangeSupport> DataBinder put(String name, T propertyChangeSupport) {
         this.propertyChangeSupports.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
-        this.binderProvider.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
+        this.dataBindProvider.put(name.toLowerCase(Locale.getDefault()), propertyChangeSupport);
         return this;
     }
 
-    public ViewBinder execute() {
+    public DataBinder execute() {
         for (Map.Entry<String, Map<String, PropertyChangeListener>> entry1 : listeners.entrySet()) {
             PropertyChangeSupport propertyChangeSupport = propertyChangeSupports.get(entry1.getKey());
             for (Map.Entry<String, PropertyChangeListener> entry2 : entry1.getValue().entrySet()) {
@@ -47,7 +47,7 @@ public final class ViewBinder {
         return this;
     }
 
-    public ViewBinder bind(final int id, final BindType type, final String dataName, final String propertyName, final Object value) {
+    public DataBinder bind(final int id, final BindType type, final String dataName, final String propertyName, final Object value) {
         Map<String, PropertyChangeListener> mapper = this.listeners.get(dataName);
         if (mapper == null) {
             mapper = new HashMap<>();
@@ -56,13 +56,13 @@ public final class ViewBinder {
         mapper.put(propertyName, new PropertyChangeListener() {
             @Override
             public void propertyChanged() {
-                binderProvider.bind(id, type, value);
+                dataBindProvider.bind(id, type, value);
             }
         });
         return this;
     }
 
-    public ViewBinder bind(int id, BindType type, Object value) {
+    public DataBinder bind(int id, BindType type, Object value) {
         if (value instanceof String) {
             String express = ExpressBinder.getExpress((String) value);
             if (express != null) {
@@ -71,24 +71,24 @@ public final class ViewBinder {
                 return bind(id, type, dataName, propertyName, value);
             }
         }
-        binderProvider.bind(id, type, value);
+        dataBindProvider.bind(id, type, value);
         return this;
     }
 
     public ViewRender getViewRender() {
-        return binderProvider.getViewRender();
+        return dataBindProvider.getViewRender();
     }
 
-    public ViewBinder(Activity activity) {
-        binderProvider = BinderFactory.create(activity);
+    public DataBinder(Activity activity) {
+        dataBindProvider = DataBindProviderFactory.create(activity);
     }
 
-    public ViewBinder(View view) {
-        binderProvider = BinderFactory.create(view);
+    public DataBinder(View view) {
+        dataBindProvider = DataBindProviderFactory.create(view);
     }
 
-    public ViewBinder(Context context, SparseArray<View> views) {
-        binderProvider = BinderFactory.create(context, views);
+    public DataBinder(Context context, SparseArray<View> views) {
+        dataBindProvider = DataBindProviderFactory.create(context, views);
     }
 
 }

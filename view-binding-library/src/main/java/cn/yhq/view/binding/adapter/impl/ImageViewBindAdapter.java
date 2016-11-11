@@ -1,15 +1,15 @@
-package cn.yhq.view.binding.provider.impl;
-
-import java.io.File;
+package cn.yhq.view.binding.adapter.impl;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 
-import cn.yhq.view.binding.provider.IImageViewBinding;
+import java.io.File;
 
-public class ImageViewBinding implements IImageViewBinding {
+import cn.yhq.view.binding.adapter.IImageViewBindAdapter;
+
+public class ImageViewBindAdapter extends ViewBindAdapter implements IImageViewBindAdapter {
 
   @Override
   public void setImage(View v, String url) {

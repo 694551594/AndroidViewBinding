@@ -4,11 +4,11 @@ package cn.yhq.view.binding.binder;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class BaseBinder {
+public class BaseDataBinder {
 
     protected ViewRender viewRender;
 
-    public BaseBinder(ViewRender viewRender) {
+    public BaseDataBinder(ViewRender viewRender) {
         this.viewRender = viewRender;
     }
 

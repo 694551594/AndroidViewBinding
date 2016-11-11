@@ -1,8 +1,8 @@
-package cn.yhq.view.binding.provider;
+package cn.yhq.view.binding.adapter;
 
 import android.view.View;
 
-public interface ITextViewBinding {
+public interface ITextViewBindAdapter {
   void setText(View v, CharSequence text);
 
   void setText(View v, int resId);

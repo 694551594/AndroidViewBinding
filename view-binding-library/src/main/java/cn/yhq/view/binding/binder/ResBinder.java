@@ -1,12 +1,13 @@
 package cn.yhq.view.binding.binder;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 
 /**
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ResBinder extends BaseBinder implements IBinder {
+public class ResBinder extends BaseDataBinder implements IDataBinder {
 
     public ResBinder(ViewRender viewRender) {
         super(viewRender);
@@ -34,6 +35,10 @@ public class ResBinder extends BaseBinder implements IBinder {
         return viewRender.getContext().getResources().getString(id);
     }
 
+    private Drawable getDrawable(int id) {
+        return viewRender.getContext().getResources().getDrawable(id);
+    }
+
     private int getInt(int id) {
         return viewRender.getContext().getResources().getInteger(id);
     }
@@ -47,6 +52,23 @@ public class ResBinder extends BaseBinder implements IBinder {
                 break;
             case CHECKED:
                 viewRender.setCheck(id, this.getBoolean(resId));
+                break;
+            case IMAGE_FILE:
+                break;
+            case IMAGE_DRAWABLE:
+                viewRender.setImage(id, this.getDrawable(resId));
+                break;
+            case TAG:
+                break;
+            case LISTENER_CLICK:
+                break;
+            case LISTENER_LONG_CLICK:
+                break;
+            case LISTENER_ITEM_CLICK:
+                break;
+            case LISTENER_ITEM_LONG_CLICK:
+                break;
+            case LISTENER_CHECKED_CHANGE:
                 break;
             case VISIBILITY:
                 viewRender.setVisibility(id, this.getInt(resId));

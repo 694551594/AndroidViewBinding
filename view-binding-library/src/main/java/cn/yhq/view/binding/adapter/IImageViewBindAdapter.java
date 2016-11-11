@@ -1,4 +1,4 @@
-package cn.yhq.view.binding.provider;
+package cn.yhq.view.binding.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -6,7 +6,7 @@ import android.view.View;
 
 import java.io.File;
 
-public interface IImageViewBinding {
+public interface IImageViewBindAdapter {
   void setImage(View v, String url);
 
   void setImage(View v, Bitmap bitmap);

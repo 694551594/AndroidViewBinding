@@ -1,10 +1,17 @@
 package cn.yhq.view.binding.binder;
 
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CompoundButton;
+
+import java.io.File;
+
 /**
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class ValueBinder extends BaseBinder implements IBinder {
+public class ValueBinder extends BaseDataBinder implements IDataBinder {
 
     public ValueBinder(ViewRender viewRender) {
         super(viewRender);
@@ -18,6 +25,30 @@ public class ValueBinder extends BaseBinder implements IBinder {
                 break;
             case CHECKED:
                 viewRender.setCheck(id, (Boolean) value);
+                break;
+            case IMAGE_FILE:
+                viewRender.setImage(id, (File) value);
+                break;
+            case IMAGE_DRAWABLE:
+                viewRender.setImage(id, (Drawable) value);
+                break;
+            case TAG:
+                viewRender.setTag(id, value);
+                break;
+            case LISTENER_CLICK:
+                viewRender.setOnClickListener(id, (View.OnClickListener) value);
+                break;
+            case LISTENER_LONG_CLICK:
+                viewRender.setOnLongClickListener(id, (View.OnLongClickListener) value);
+                break;
+            case LISTENER_ITEM_CLICK:
+                viewRender.setOnItemClickListener(id, (AdapterView.OnItemClickListener) value);
+                break;
+            case LISTENER_ITEM_LONG_CLICK:
+                viewRender.setOnItemLongClickListener(id, (AdapterView.OnItemLongClickListener) value);
+                break;
+            case LISTENER_CHECKED_CHANGE:
+                viewRender.setOnCheckedChangeListener(id, (CompoundButton.OnCheckedChangeListener) value);
                 break;
             case VISIBILITY:
                 viewRender.setVisibility(id, (Integer) value);

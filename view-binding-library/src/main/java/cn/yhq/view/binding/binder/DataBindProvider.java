@@ -9,23 +9,23 @@ import android.view.View;
  * Created by Yanghuiqiang on 2016/11/10.
  */
 
-public class BinderProvider {
+public class DataBindProvider {
     private final ViewRender viewRender = new ViewRender();
-    private final IBinder[] binders = {
+    private final IDataBinder[] binders = {
             new ResBinder(viewRender),
             new ExpressBinder(viewRender),
             new ValueBinder(viewRender)
     };
 
-    BinderProvider(Activity activity) {
+    DataBindProvider(Activity activity) {
         viewRender.attach(activity, activity);
     }
 
-    BinderProvider(View view) {
+    DataBindProvider(View view) {
         viewRender.attach(view.getContext(), view);
     }
 
-    BinderProvider(Context context, SparseArray<View> views) {
+    DataBindProvider(Context context, SparseArray<View> views) {
         viewRender.attach(context, views);
     }
 
@@ -34,7 +34,7 @@ public class BinderProvider {
     }
 
     public void bind(int id, BindType type, Object value) {
-        for (IBinder binder : binders) {
+        for (IDataBinder binder : binders) {
             if (binder.isHandle(value)) {
                 binder.onBind(id, type, value);
                 return;
@@ -43,7 +43,7 @@ public class BinderProvider {
     }
 
     public void put(String name, Object data) {
-        for (IBinder binder : binders) {
+        for (IDataBinder binder : binders) {
             binder.onPut(name, data);
         }
     }

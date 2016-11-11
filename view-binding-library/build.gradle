@@ -37,7 +37,7 @@ publish {
     userOrg = '694551594'
     groupId = 'cn.yhq'
     artifactId = 'android-view-binding'
-    publishVersion = '1.0.2'
+    publishVersion = '1.1.0'
     desc = 'android组件绑定统一接口'
     website = 'https://github.com/694551594/AndroidViewBinding'
 }

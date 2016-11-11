@@ -1,11 +1,11 @@
-package cn.yhq.view.binding.provider.impl;
+package cn.yhq.view.binding.adapter.impl;
 
 import android.view.View;
 import android.widget.TextView;
 
-import cn.yhq.view.binding.provider.ITextViewBinding;
+import cn.yhq.view.binding.adapter.ITextViewBindAdapter;
 
-public class TextViewBinding implements ITextViewBinding {
+public class TextViewBindAdapter extends ViewBindAdapter implements ITextViewBindAdapter {
 
   @Override
   public void setText(View v, CharSequence text) {

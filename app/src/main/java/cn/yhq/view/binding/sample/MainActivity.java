@@ -2,12 +2,10 @@ package cn.yhq.view.binding.sample;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cn.yhq.base.BaseActivity;
-import cn.yhq.view.binding.ViewBinder;
-import cn.yhq.view.binding.ViewBinderFactory;
+import cn.yhq.view.binding.DataBinderFactory;
 import cn.yhq.view.binding.binder.BindType;
 import cn.yhq.view.binding.property.PropertyChangeSupport;
 
@@ -55,23 +53,21 @@ public class MainActivity extends BaseActivity {
         this.user2.setPassword("我是用户2密码");
         this.user2.setUsername("我是用户2用户名");
 
-        ViewBinder viewBinder = ViewBinderFactory.create(this)
+        DataBinderFactory.create(this)
                 .put("user1", user1)
                 .put("user2", user2)
                 .bind(R.id.textView1, BindType.TEXT, "${user1.username}")
                 .bind(R.id.textView2, BindType.TEXT, "${user2.password}")
                 .bind(R.id.button, BindType.TEXT, "改变值")
+                .bind(R.id.button, BindType.LISTENER_CLICK, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        index++;
+                        user1.setUsername("用户1用户名改变了" + index);
+                        user2.setPassword("用户2用户密码改变了" + index);
+                    }
+                })
                 .execute();
-
-        Button button = viewBinder.getViewRender().getView(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                index++;
-                user1.setUsername("用户1用户名改变了" + index);
-                user2.setPassword("用户2用户密码改变了" + index);
-            }
-        });
     }
 
     @Override
